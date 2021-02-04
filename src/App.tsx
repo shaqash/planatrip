@@ -14,9 +14,9 @@ function App() {
       <Router basename={process.env.PUBLIC_URL}>
         <Suspense fallback={<div>Loading...</div>}>
           <Switch>
-            <Route exact component={Main} path={'/'} />
-            <Route component={Trip} path={'/trip/:id'} />
-            <Route component={Thanks} path={'/thanks'} />
+            <Route exact component={Main} path={`/`} />
+            <Route component={Trip} path={`/trip/:id`} />
+            <Route exact component={Thanks} path={`/thanks`} />
           </Switch>
         </Suspense>
       </Router>

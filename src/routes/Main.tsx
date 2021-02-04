@@ -1,9 +1,9 @@
-import React, { useState, useContext } from 'react';
-import { FireContext } from '../App';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 export default function Main() {
   const [input, setInput] = useState('');
-  const firebase = useContext(FireContext);
+  const history = useHistory();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
@@ -11,14 +11,7 @@ export default function Main() {
 
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    (async function getTrip() {
-      const trip = await firebase?.storage.collection('trips')
-        .doc(input)
-        .get()
-        .then((res) => res.data());
-      console.log(trip)
-    })();
-
+    history.push(`/trip/${input}`)
   }
 
   return (

@@ -36,10 +36,10 @@ export default function Trip() {
 
   function handleFormChange(e: React.ChangeEvent<HTMLInputElement>) {
     function parser(value: string) {
-      if (e.target.name === 'driver') return parseInt(value);
+      if (e.target.name === 'driver') return Number.isNaN(parseInt(value)) ? 0 : parseInt(value);
       else if (e.target.name === 'brings') return value.replace(' ', '').split(',');
       return value;
-    } 
+    }
     setFormData({
       ...formData,
       [e.target.name]: parser(e.target.value),
@@ -92,11 +92,21 @@ export default function Trip() {
   function getWeNeed(data: TripType) {
     let brings = data.participants.reduce((acc, cur) => acc.concat(cur.brings), [] as string[]);
 
-    return data.requirements.filter((req) => { 
+    return data.requirements.filter((req) => {
       const itemIndex = brings.findIndex((bring) => bring === req);
-      brings = [...brings.slice(0, itemIndex), ...brings.slice(itemIndex+1)];
+      brings = [...brings.slice(0, itemIndex), ...brings.slice(itemIndex + 1)];
       return itemIndex === -1;
     }).toString() || 'Nothing more';
+  }
+
+  function changeCheckbox(current: boolean) {
+    if (current) {
+      setFormData((state) => ({
+        ...state,
+        driver: 0,
+      }));
+    }
+    setCheckbox(!current);
   }
 
   React.useEffect(() => loadTrip(), [loadTrip]);
@@ -110,28 +120,28 @@ export default function Trip() {
             tripData && !error ? (
               <>
                 <span className="chungus">{tripData.title}</span>
+                <i>{formatDate(tripData)}</i>
                 <span>{calcStatus(tripData)} seats left</span>
                 <p>
                   {tripData.description}
-                  <br />
-                  {formatDate(tripData)}
-                  <br />
-                  <strong>We have</strong>: {getWeHave(tripData)}
-                  <br />
-                  <strong>We need</strong>: {getWeNeed(tripData)}
-                  <br />
-                  <strong>Going</strong>: {tripData.participants.map((item) => ` ${item.name} ${getDriverTitle(item)}`).toString()}
                 </p>
+                <span><strong>We need</strong>: {getWeNeed(tripData)}</span>
+                <span><strong>We have</strong>: {getWeHave(tripData)}</span>
+                <span>
+                  <strong>Going</strong>: {tripData.participants.map((item) => ` ${item.name} ${getDriverTitle(item)}`).toString()}
+                </span>
                 <form onSubmit={submit}>
                   <div className="row">
-                    <input required onChange={handleFormChange} value={formData.name} name="name" type="text" placeholder="Name" />
+                    <label><small>Name</small></label>
+                    <input required onChange={handleFormChange} value={formData.name} name="name" type="text" placeholder="EYAL!" />
                   </div>
                   <div className="row">
+                    <label><small>Brings</small></label>
                     <input required onChange={handleFormChange} value={formData.brings} name="brings" type="text" placeholder={`${tripData?.requirements.slice(0, 3)}...`} />
                   </div>
                   <div>
                     <span>Driver? </span>
-                    <input name="driver" onChange={() => setCheckbox((state) => !state)} type="checkbox" />
+                    <input name="driver" onChange={() => changeCheckbox(checkbox)} type="checkbox" />
                   </div>
                   <div className="row" style={{ visibility: !checkbox ? 'collapse' : 'visible' }}>
                     <input onChange={handleFormChange} name="driver" type="text" value={formData.driver !== 0 ? formData.driver : ''} placeholder="Passengers (number)" />
