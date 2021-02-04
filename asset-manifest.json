@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/planatrip/static/css/main.ec3c66ce.chunk.css",
-    "main.js": "/planatrip/static/js/main.71bac1a5.chunk.js",
-    "main.js.map": "/planatrip/static/js/main.71bac1a5.chunk.js.map",
-    "runtime-main.js": "/planatrip/static/js/runtime-main.7b356ad9.js",
-    "runtime-main.js.map": "/planatrip/static/js/runtime-main.7b356ad9.js.map",
+    "main.js": "/planatrip/static/js/main.98d0f116.chunk.js",
+    "main.js.map": "/planatrip/static/js/main.98d0f116.chunk.js.map",
+    "runtime-main.js": "/planatrip/static/js/runtime-main.bd26bbf8.js",
+    "runtime-main.js.map": "/planatrip/static/js/runtime-main.bd26bbf8.js.map",
     "static/js/2.1f5c5b9b.chunk.js": "/planatrip/static/js/2.1f5c5b9b.chunk.js",
     "static/js/2.1f5c5b9b.chunk.js.map": "/planatrip/static/js/2.1f5c5b9b.chunk.js.map",
     "static/js/3.2293f509.chunk.js": "/planatrip/static/js/3.2293f509.chunk.js",
     "static/js/3.2293f509.chunk.js.map": "/planatrip/static/js/3.2293f509.chunk.js.map",
-    "static/js/4.db20827d.chunk.js": "/planatrip/static/js/4.db20827d.chunk.js",
-    "static/js/4.db20827d.chunk.js.map": "/planatrip/static/js/4.db20827d.chunk.js.map",
+    "static/js/4.544e91a4.chunk.js": "/planatrip/static/js/4.544e91a4.chunk.js",
+    "static/js/4.544e91a4.chunk.js.map": "/planatrip/static/js/4.544e91a4.chunk.js.map",
     "static/js/5.97a1552c.chunk.js": "/planatrip/static/js/5.97a1552c.chunk.js",
     "static/js/5.97a1552c.chunk.js.map": "/planatrip/static/js/5.97a1552c.chunk.js.map",
     "static/js/6.3225bc93.chunk.js": "/planatrip/static/js/6.3225bc93.chunk.js",
@@ -20,9 +20,9 @@
     "static/js/2.1f5c5b9b.chunk.js.LICENSE.txt": "/planatrip/static/js/2.1f5c5b9b.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.7b356ad9.js",
+    "static/js/runtime-main.bd26bbf8.js",
     "static/js/2.1f5c5b9b.chunk.js",
     "static/css/main.ec3c66ce.chunk.css",
-    "static/js/main.71bac1a5.chunk.js"
+    "static/js/main.98d0f116.chunk.js"
   ]
 }
