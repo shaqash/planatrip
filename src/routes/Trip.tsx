@@ -1,6 +1,6 @@
 
 import React, { useState, useContext, useCallback } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory, NavLink, Route, useLocation, Link } from 'react-router-dom';
 import { FireContext } from '../App';
 
 interface TripParticipant {
@@ -17,6 +17,7 @@ interface TripType {
   requirements: string[];
   startDate: { toDate: () => Date };
   endDate: { toDate: () => Date };
+  details: string;
 }
 
 export default function Trip() {
@@ -27,6 +28,7 @@ export default function Trip() {
   const { id } = useParams<{ id: string }>();
   const firebase = useContext(FireContext);
   const [checkbox, setCheckbox] = useState(false);
+  const [moreDetails, setMoreDetails] = useState(false);
   const [formData, setFormData] = useState<TripParticipant>({
     name: '',
     driver: 0,
@@ -58,8 +60,13 @@ export default function Trip() {
 
   function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    const newParticipants = tripData?.participants.flatMap(
+      (person) => person.name === formData.name ? [] : [person]
+    ).concat(formData);
+
     firebase?.storage.collection('trips').doc(id)
-      .update({ participants: tripData?.participants.concat(formData) })
+      .update({ participants: newParticipants })
       .finally(() => history.push('/thanks'));
   }
 
@@ -122,13 +129,22 @@ export default function Trip() {
                 <span className="chungus">{tripData.title}</span>
                 <i>{formatDate(tripData)}</i>
                 <span>{calcStatus(tripData)} seats left</span>
-                <p>
-                  {tripData.description}
+                <p className="max">
+                  {tripData.description}{' '}
+                  <>
+                    <span
+                      className="App-link"
+                      onClick={() => setMoreDetails(!moreDetails)}>
+                      {!moreDetails ? 'More' : 'Less'} details/checklist
+                    </span>
+
+                  </>
                 </p>
+                {moreDetails && <TripDetails data={tripData} />}
                 <span className="max"><strong>We need</strong>: {getWeNeed(tripData)}</span>
                 <span className="max"><strong>We have</strong>: {getWeHave(tripData)}</span>
                 <span className="max">
-                  <strong>Going</strong>: {tripData.participants.map((item) => ` ${item.name} ${getDriverTitle(item)}`).toString()}
+                  <strong>Going</strong>: {tripData.participants.map((item) => ` ${item.name}${getDriverTitle(item)}`).toString()}
                 </span>
                 <form onSubmit={submit}>
                   <div className="row">
@@ -156,4 +172,21 @@ export default function Trip() {
       </header>
     </div>
   );
+}
+
+function TripDetails({ data }: { data: TripType }) {
+
+  return (
+    <div className="max highlight f09">
+      {data.details && <div className="max m-bottom-small">{data.details}</div>}
+      <h4 className="left"><i>Checklist</i></h4>
+      <ul className="left">
+      {
+        data.participants.map((person) => <li>
+          <b>{person.name}: </b>{person.brings.toString()}
+        </li>)
+      }
+      </ul>
+    </div>
+  )
 }
