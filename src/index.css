@@ -51,3 +51,16 @@ code {
 .chungus {
   font-size: 2.5rem;
 }
+
+.max {
+  max-width: 600px;
+  overflow-wrap: break-word;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+@media (max-width: 600px) {
+  .max {
+    max-width: 340px;
+  }
+}

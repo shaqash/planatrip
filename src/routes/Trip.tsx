@@ -125,9 +125,9 @@ export default function Trip() {
                 <p>
                   {tripData.description}
                 </p>
-                <span><strong>We need</strong>: {getWeNeed(tripData)}</span>
-                <span><strong>We have</strong>: {getWeHave(tripData)}</span>
-                <span>
+                <span className="max"><strong>We need</strong>: {getWeNeed(tripData)}</span>
+                <span className="max"><strong>We have</strong>: {getWeHave(tripData)}</span>
+                <span className="max">
                   <strong>Going</strong>: {tripData.participants.map((item) => ` ${item.name} ${getDriverTitle(item)}`).toString()}
                 </span>
                 <form onSubmit={submit}>
