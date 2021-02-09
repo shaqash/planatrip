@@ -1,8 +1,13 @@
 
 import React, { useState, useContext, useCallback } from 'react';
-import { useParams, useHistory, NavLink, Route, useLocation, Link } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { FireContext } from '../App';
+import useForm from '../hooks/useForm';
 
+interface Link {
+  title: string;
+  href: string;
+}
 interface TripParticipant {
   driver: number;
   name: string;
@@ -18,6 +23,7 @@ interface TripType {
   startDate: { toDate: () => Date };
   endDate: { toDate: () => Date };
   details: string;
+  links: Link[];
 }
 
 export default function Trip() {
@@ -29,23 +35,18 @@ export default function Trip() {
   const firebase = useContext(FireContext);
   const [checkbox, setCheckbox] = useState(false);
   const [moreDetails, setMoreDetails] = useState(false);
-  const [formData, setFormData] = useState<TripParticipant>({
+  const { submit, handleFormChange, values: formData, setValues: setFormData } = useForm<TripParticipant>({
     name: '',
     driver: 0,
     brings: [],
     drivingWith: '',
-  });
+  }, onSubmit, valueParser)
 
-  function handleFormChange(e: React.ChangeEvent<HTMLInputElement>) {
-    function parser(value: string) {
-      if (e.target.name === 'driver') return Number.isNaN(parseInt(value)) ? 0 : parseInt(value);
-      else if (e.target.name === 'brings') return value.replace(' ', '').split(',');
-      return value;
-    }
-    setFormData({
-      ...formData,
-      [e.target.name]: parser(e.target.value),
-    });
+  function valueParser(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value as string;
+    if (e.target.name === 'driver') return Number.isNaN(parseInt(value)) ? 0 : parseInt(value);
+    else if (e.target.name === 'brings') return value.replace(' ', '').split(',');
+    return value;
   }
 
   function calcStatus(data: TripType) {
@@ -54,13 +55,17 @@ export default function Trip() {
     return seats;
   }
 
-  function getWeHave(data: TripType) {
-    return data.participants.reduce((acc, cur) => acc.concat(cur.brings), [] as string[]).toString();
+  function formatItem(item: string, index: number) {
+    return index === 0 ? item : `, ${item}`;
   }
 
-  function submit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  function getWeHave(data: TripType) {
+    return data.participants
+      .reduce((acc, cur) => acc.concat(cur.brings), [] as string[])
+      .map(formatItem);
+  }
 
+  function onSubmit() {
     const newParticipants = tripData?.participants.flatMap(
       (person) => person.name === formData.name ? [] : [person]
     ).concat(formData);
@@ -103,7 +108,7 @@ export default function Trip() {
       const itemIndex = brings.findIndex((bring) => bring === req);
       brings = [...brings.slice(0, itemIndex), ...brings.slice(itemIndex + 1)];
       return itemIndex === -1;
-    }).toString() || 'Nothing more';
+    }).map(formatItem) || 'Nothing more';
   }
 
   function changeCheckbox(current: boolean) {
@@ -179,13 +184,19 @@ function TripDetails({ data }: { data: TripType }) {
   return (
     <div className="max highlight f09">
       {data.details && <div className="max m-bottom-small">{data.details}</div>}
+      <h4 className="left"><i>Links</i></h4>
+      <ul className="left">
+        {
+          data.links.map((link) => <li key={JSON.stringify(link)}><a href={link.href}>{link.title}</a></li>)
+        }
+      </ul>
       <h4 className="left"><i>Checklist</i></h4>
       <ul className="left">
-      {
-        data.participants.map((person) => <li>
-          <b>{person.name}: </b>{person.brings.toString()}
-        </li>)
-      }
+        {
+          data.participants.map((person) => <li>
+            <b>{person.name}: </b>{person.brings.toString()}
+          </li>)
+        }
       </ul>
     </div>
   )
