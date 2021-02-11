@@ -24,6 +24,7 @@ interface TripType {
   endDate: { toDate: () => Date };
   details: string;
   links: Link[];
+  dontForget: string[];
 }
 
 export default function Trip() {
@@ -190,10 +191,16 @@ function TripDetails({ data }: { data: TripType }) {
           data.links.map((link) => <li key={JSON.stringify(link)}><a href={link.href}>{link.title}</a></li>)
         }
       </ul>
+      <h4 className="left"><i>Don't Forget</i></h4>
+      <ul className="left">
+        {
+          data.dontForget.map((item) => <li key={JSON.stringify(item)}>{item}</li>)
+        }
+      </ul>
       <h4 className="left"><i>Checklist</i></h4>
       <ul className="left">
         {
-          data.participants.map((person) => <li>
+          data.participants.map((person) => <li key={JSON.stringify(person)}>
             <b>{person.name}: </b>{person.brings.toString()}
           </li>)
         }
